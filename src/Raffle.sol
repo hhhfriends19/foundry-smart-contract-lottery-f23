@@ -27,6 +27,7 @@
 pragma solidity ^0.8.18;
 
 import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 /**
  * @title A sample Raffle Contract
@@ -34,7 +35,7 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/interface
  * @notice This contract is for creating a sample raffle
  * @dev Implements Chainlink VRFv2
  */
-contract Raffle {
+contract Raffle is VRFConsumerBaseV2 {
     error Raffle__NotEnoughEthSent();
 
     /** State Variables */
@@ -64,7 +65,7 @@ contract Raffle {
         bytes32 gasLane,
         uint64 subscriptionId,
         uint32 callbackGasLimit
-    ) {
+    ) VRFConsumerBaseV2(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinator);
@@ -107,6 +108,11 @@ contract Raffle {
             NUM_WORDS
         );
     }
+
+    function fulfillRandomWords(
+        uint256 requestId,
+        uint256[] memory randomWords
+    ) internal override {}
 
     /** Getter Function */
     function getEntranceFee() external view returns (uint256) {
