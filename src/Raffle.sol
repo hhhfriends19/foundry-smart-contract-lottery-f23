@@ -126,14 +126,16 @@ contract Raffle is VRFConsumerBaseV2 {
         );
     }
 
+    // CEI: Checks, Effects, Interactions
     function fulfillRandomWords(
         uint256 requestId,
         uint256[] memory randomWords
     ) internal override {
-        // s_players = 10
-        // rng随机数 = 12
-        // 12 % 10 = 2
-        // 123123903842309840329840938935489084098345 % 10 = 5
+        // Checks
+        // require (if -> errors) this change is gas efficient
+
+        // Effects (Our own contract)
+
         uint256 indexOfWinner = randomWords[0] % s_players.length;
         address payable winner = s_players[indexOfWinner];
         s_recentWinner = winner;
@@ -141,12 +143,13 @@ contract Raffle is VRFConsumerBaseV2 {
 
         s_players = new address payable[](0);
         s_lastTimeStamp = block.timestamp;
+        emit PickedWinner(winner);
 
+        // Interactions (Other contracts) this change is to avoid reentrancy
         (bool success, ) = winner.call{value: address(this).balance}("");
         if (!success) {
             revert Raffle__TransferFailed();
         }
-        emit PickedWinner(winner);
     }
 
     /** Getter Function */
