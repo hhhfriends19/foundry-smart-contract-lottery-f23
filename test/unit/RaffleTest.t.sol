@@ -32,6 +32,7 @@ contract RaffleTest is Test {
             subscriptionId,
             callbackGasLimit
         ) = helperConfig.activeNetworkConfig();
+        vm.deal(PLAYER, STARTING_USER_BALANCE);
     }
 
     function testRaffleInitializesInOpenState() public view {
@@ -48,5 +49,14 @@ contract RaffleTest is Test {
         // Act / Assert
         vm.expectRevert(Raffle.Raffle__NotEnoughEthSent.selector);
         raffle.enterRaffle();
+    }
+
+    function testRaffleRecordsPlayerWhenTheyEnter() public {
+        // arrange:
+        vm.prank(PLAYER);
+        // act / assert:
+        raffle.enterRaffle{value: entranceFee}();
+        address playerRecorded = raffle.getPlayer(0);
+        assert(playerRecorded == PLAYER);
     }
 }
