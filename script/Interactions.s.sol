@@ -11,7 +11,8 @@ contract CreateSubscription is Script {
         // We can use our HelperConfig to create our subscription,
         // we need to call VRFCoordinator first
         HelperConfig helperConfig = new HelperConfig();
-        (, , address vrfCoordinator, , , ) = helperConfig.activeNetworkConfig();
+        (, , address vrfCoordinator, , , , ) = helperConfig
+            .activeNetworkConfig();
         return createSubscription(vrfCoordinator);
     }
 
@@ -31,5 +32,28 @@ contract CreateSubscription is Script {
 
     function run() external returns (uint64) {
         return createSubscriptionUsingConfig();
+    }
+}
+
+contract FundSubscription is Script {
+    uint96 public constant FUND_AMOUNT = 3 ether;
+
+    function fundSubscriptionUsingConfig() public {
+        // We need VRFCoordinatorV2Mock address and the LINK address
+        // We need to add LINK address in HelperConfig.s.sol
+        HelperConfig helperConfig = new HelperConfig();
+        (
+            ,
+            ,
+            address vrfCoordinator,
+            ,
+            uint64 subId,
+            ,
+            address link
+        ) = helperConfig.activeNetworkConfig();
+    }
+
+    function run() external {
+        fundSubscriptionUsingConfig();
     }
 }
