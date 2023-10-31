@@ -1,5 +1,6 @@
-// SPDX-License-Identifier: MIT
+// unit test
+// integration test: testing our deploy scripts and varish components of our contract
+// forked test: pseudo staging integration tests
+// staging <- run test on a mainnet/testnet
 
-pragma solidity ^0.8.18;
-
-contract h {}
+// TODO: For you!
